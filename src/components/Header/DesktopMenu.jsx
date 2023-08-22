@@ -15,6 +15,8 @@ function DesktopMenu() {
                     href="/"
                     sx={{
                         display: { xs: 'none', md: 'flex' },
+                        gap: '20px',
+                        alignItems: 'center',
                         fontFamily: 'monospace',
                         fontWeight: 700,
                         letterSpacing: '.3rem',
@@ -24,7 +26,7 @@ function DesktopMenu() {
                     }}
                 >
                     <Logo />
-                    Tub Tree Cabin?
+                    Tub Tree Cabin
                 </Typography>
                 <Stack direction="row" spacing={2}>
                     <NavLink to="/Home">
