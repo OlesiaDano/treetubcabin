@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Box } from '@mui/material';
-import FormButton from '../FormButton/FormButton';
-
-import { BookingForm } from './Booking.style';
-import { BookingField } from './Booking.style';
-import { BookingDate } from './Booking.style';
+import { BookingForm, BookingField, BookingDate, SubmitBtn } from './Booking.style';
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../styles';
@@ -21,6 +17,7 @@ function Booking() {
     const [email, setEmail] = useState('');
     const [telegram, setTelegram] = useState('');
     const [comments, setComments] = useState('');
+    const [bookedDates, setBookedDates] = useState([]);
 
     useEffect(() => {
         // Retrieve the bookingRequest array from localStorage or initialize it as an empty array
@@ -30,22 +27,20 @@ function Booking() {
         } else {
             localStorage.setItem('bookingRequest', JSON.stringify([]));
         }
-    }, []);
-
-    const [bookedDates, setBookedDates] = useState([]);
+    }, [bookedDates]);
 
     const handleStartDateChange = (date) => {
-        const formattedDate = date.format('YYYY-MM-DD');
+        const formattedDate = date.format('DD-MM-YYYY');
         setStartDate(formattedDate);
     };
 
     const handleEndDateChange = (date) => {
-        const formattedDate = date.format('YYYY-MM-DD');
+        const formattedDate = date.format('DD-MM-YYYY');
         setEndDate(formattedDate);
     };
 
     const isDateBooked = (date) => {
-        const formattedDate = date.format('YYYY-MM-DD');
+        const formattedDate = date.format('DD-MM-YYYY');
         return bookedDates.some((booking) => booking.startDate === formattedDate);
     };
 
@@ -80,8 +75,9 @@ function Booking() {
         // Update the bookedDates state with the newly booked dates
         const newBookedDates = [];
         let currentDate = dayjs(startDate);
+
         while (currentDate.isSameOrBefore(dayjs(endDate), 'day')) {
-            newBookedDates.push(currentDate.format('YYYY-MM-DD'));
+            newBookedDates.push(currentDate.format('DD-MM-YYYY'));
             currentDate = currentDate.add(1, 'day');
         }
         setBookedDates(newBookedDates);
@@ -108,11 +104,11 @@ function Booking() {
                             variant="filled"
                             label="Start Date"
                             color="primary"
-                            format="MM - DD - YYYY"
+                            format="DD-MM-YYYY"
                             value={startDate}
                             onChange={handleStartDateChange}
                             renderDay={(day, _selectedDate, _DayComponentProps) => {
-                                const formattedDate = dayjs(day).format('YYYY-MM-DD');
+                                const formattedDate = dayjs(day).format('DD-MM-YYYY');
                                 const isBooked = isDateBooked(day);
                                 return <div style={{ textDecoration: isBooked ? 'line-through' : 'none' }}>{formattedDate}</div>;
                             }}
@@ -120,11 +116,11 @@ function Booking() {
                         <BookingDate
                             variant="filled"
                             label="End Date"
-                            format="MM - DD - YYYY"
+                            format="DD-MM-YYYY"
                             value={endDate}
                             onChange={handleEndDateChange}
                             renderDay={(day, _selectedDate, _DayComponentProps) => {
-                                const formattedDate = dayjs(day).format('YYYY-MM-DD');
+                                const formattedDate = dayjs(day).format('DD-MM-YYYY');
                                 const isBooked = isDateBooked(day);
                                 return <div style={{ textDecoration: isBooked ? 'line-through' : 'none' }}>{formattedDate}</div>;
                             }}
@@ -175,7 +171,7 @@ function Booking() {
                         value={comments}
                         onChange={(e) => setComments(e.target.value)}
                     />
-                    <FormButton onSubmit={handleFormSubmit} name={'Book Now'} />
+                    <SubmitBtn type="submit" onClick={handleFormSubmit}>Book Now</SubmitBtn>
                 </BookingForm >
             </ThemeProvider>
         </LocalizationProvider >

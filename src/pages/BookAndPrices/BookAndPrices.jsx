@@ -6,7 +6,10 @@ import { Colors } from '../../styles';
 
 function BookAndPrices() {
 
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Hello')
+  }
 
   return (
     <PageWrapper>

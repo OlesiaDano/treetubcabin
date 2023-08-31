@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import {  Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { ContactField } from './ContactForm.style';
-import FormButton from '../FormButton/FormButton';
 
 function ContactForm() {
     const [name, setName] = useState('');
@@ -102,7 +101,7 @@ function ContactForm() {
                 margin="normal"
                 color="success"
             />
-            <FormButton onSubmit={handleSubmit} name={'Send'} />
+            <button onSubmit={handleSubmit}>Send</button>
         </form>
     );
 }
