@@ -5,7 +5,7 @@ import { KeyboardArrowUp } from '@mui/icons-material';
 import { Colors } from "../styles";
 
 export const ArrowUp = styled(KeyboardArrowUp)(
-    ({ theme, showArrow }) => css`
+    ({ showarrow }) => css`
     position: fixed;
     bottom: 25px;
     right: 40px;
@@ -13,8 +13,8 @@ export const ArrowUp = styled(KeyboardArrowUp)(
     border-radius: 50%;
     padding: 15px;
     z-index: 100;
-    visibility: ${showArrow ? 'visible' : 'hidden'};
-    opacity: ${showArrow ? 1 : 0}; // Conditionally set the opacity
+    visibility: ${showarrow ? 'visible' : 'hidden'};
+    opacity: ${showarrow ? 1 : 0}; // Conditionally set the opacity
     transition: opacity 0.3s ease-in-out; // Add a transition effect
 `
 );

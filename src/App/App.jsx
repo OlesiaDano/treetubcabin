@@ -20,7 +20,7 @@ import './App.css'
 
 
 function App() {
-    const [showArrow, setShowArrow] = useState(false);
+    const [showarrow, setShowarrow] = useState(false);
 
     const handleScrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -32,9 +32,9 @@ function App() {
             const viewportHeight = window.innerHeight * 0.5;
 
             if (scrollPosition > viewportHeight) {
-                setShowArrow(true);
+                setShowarrow(true);
             } else {
-                setShowArrow(false);
+                setShowarrow(false);
             }
         };
 
@@ -54,7 +54,7 @@ function App() {
                     <Route path={'/about'} element={<About />}></Route>
                     <Route path={'/contacts'} element={<Contacts />}></Route>
                 </Routes>
-                <ArrowUp showArrow={showArrow} onClick={handleScrollToTop} />
+                <ArrowUp showarrow={showarrow ? true : undefined} onClick={handleScrollToTop} />
                 <Footer />
             </Router>
         </Box >

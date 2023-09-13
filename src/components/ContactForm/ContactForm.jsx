@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Typography } from '@mui/material';
 import { ContactField } from './ContactForm.style';
+import { SubmitBtn } from './ContactForm.style'
 
 function ContactForm() {
     const [name, setName] = useState('');
@@ -18,7 +19,6 @@ function ContactForm() {
             setErrorMessage('Please fill in all fields required.');
             return errorMessage;
         }
-        console.log("errorMessage: " + errorMessage);
 
         // Construct the email body
         const emailBody = `
@@ -29,7 +29,7 @@ function ContactForm() {
             Message: ${message}
         `;
 
-        // Send email
+        // Send email via openinig the user's email client
         window.location.href = `mailto:olesiadano@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
 
         // Reset form fields and error message
@@ -101,7 +101,7 @@ function ContactForm() {
                 margin="normal"
                 color="success"
             />
-            <button onSubmit={handleSubmit}>Send</button>
+            <SubmitBtn type='submit' onClick={handleSubmit}>Send</SubmitBtn>
         </form>
     );
 }

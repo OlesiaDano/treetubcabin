@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { Box } from '@mui/material';
 import { BookingForm, BookingField, BookingDate, SubmitBtn } from './Booking.style';
-
 import { ThemeProvider } from '@mui/material/styles';
 import theme from '../../styles';
-import dayjs from 'dayjs';
+// import moment from 'moment'; // Import moment
 
 function Booking() {
     const [startDate, setStartDate] = useState(null);
@@ -20,28 +19,47 @@ function Booking() {
     const [bookedDates, setBookedDates] = useState([]);
 
     useEffect(() => {
-        // Retrieve the bookingRequest array from localStorage or initialize it as an empty array
         const bookingRequest = JSON.parse(localStorage.getItem('bookingRequest'));
         if (Array.isArray(bookingRequest)) {
             setBookedDates(bookingRequest);
         } else {
             localStorage.setItem('bookingRequest', JSON.stringify([]));
         }
+        if (startDate) {
+            console.log('startdate', startDate)
+        }
+
     }, [bookedDates]);
 
     const handleStartDateChange = (date) => {
-        const formattedDate = date.format('DD-MM-YYYY');
-        setStartDate(formattedDate);
+        // const formattedDate = date.format('YYYY-MM-DD');
+        // console.log('date: ', moment(date));
+        // const momentDate = moment(date); // Initialize a moment object from the selected date
+        console.log('date', date)
+        setStartDate(date); // Set the moment object as the startDate
     };
 
     const handleEndDateChange = (date) => {
-        const formattedDate = date.format('DD-MM-YYYY');
-        setEndDate(formattedDate);
+        // const formattedDate = date.format('YYYY-MM-DD');
+        // const momentDate = moment(date); // Initialize a moment object from the selected date
+        setEndDate(date); // Set the moment object as the startDate
     };
 
     const isDateBooked = (date) => {
-        const formattedDate = date.format('DD-MM-YYYY');
-        return bookedDates.some((booking) => booking.startDate === formattedDate);
+        // const momentDate = moment(date);
+
+        return bookedDates.some((booking) => {
+            const bookingStartDate = new Date(booking.startDate);
+            const bookingEndDate = new Date(booking.endDate);
+            const selectedDate = new Date(date);
+
+            // Check if the selected date is within the range of any booking
+            // return momentDate.isBetween(bookingStartDate, bookingEndDate, null, '[]');
+            return (
+                selectedDate >= bookingStartDate &&
+                selectedDate <= bookingEndDate
+            )
+        });
     };
 
     const handleFormSubmit = (e) => {
@@ -63,26 +81,24 @@ function Booking() {
             comments,
         };
 
-        // Retrieve the existing bookingRequest array from localStorage or initialize it as an empty array
         const existingBookings = JSON.parse(localStorage.getItem('bookingRequest')) || [];
-
-        // Append the newBookingData to the existing bookings array
         const updatedBookings = [...existingBookings, newBookingData];
 
-        // Save the updated bookings array to local storage
         localStorage.setItem('bookingRequest', JSON.stringify(updatedBookings));
 
-        // Update the bookedDates state with the newly booked dates
         const newBookedDates = [];
-        let currentDate = dayjs(startDate);
+        let currentDate = startDate;
 
-        while (currentDate.isSameOrBefore(dayjs(endDate), 'day')) {
-            newBookedDates.push(currentDate.format('DD-MM-YYYY'));
+        // console.log('currentDate', startDate)
+
+        // console.log(currentDate)
+
+        while (currentDate.isSameOrBefore(endDate, 'day')) {
+            newBookedDates.push(currentDate.format('YYYY-MM-DD'));
             currentDate = currentDate.add(1, 'day');
         }
         setBookedDates(newBookedDates);
 
-        // Clear form inputs
         setStartDate(null);
         setEndDate(null);
         setName('');
@@ -93,40 +109,37 @@ function Booking() {
         setComments('');
     };
 
-
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
             <ThemeProvider theme={theme}>
                 <BookingForm>
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: '10px' }} >
-
                         <BookingDate
                             variant="filled"
                             label="Start Date"
                             color="primary"
-                            format="DD-MM-YYYY"
+                            format="YYYY-MM-DD"
                             value={startDate}
                             onChange={handleStartDateChange}
                             renderDay={(day, _selectedDate, _DayComponentProps) => {
-                                const formattedDate = dayjs(day).format('DD-MM-YYYY');
+                                // const momentDate = moment(day);
                                 const isBooked = isDateBooked(day);
-                                return <div style={{ textDecoration: isBooked ? 'line-through' : 'none' }}>{formattedDate}</div>;
+                                return <div style={{ textDecoration: isBooked ? 'line-through' : 'none' }}>{day}</div>;
                             }}
                         />
                         <BookingDate
                             variant="filled"
                             label="End Date"
-                            format="DD-MM-YYYY"
+                            format="YYYY-MM-DD"
                             value={endDate}
                             onChange={handleEndDateChange}
                             renderDay={(day, _selectedDate, _DayComponentProps) => {
-                                const formattedDate = dayjs(day).format('DD-MM-YYYY');
+                                // const momentDate = moment(day);
                                 const isBooked = isDateBooked(day);
-                                return <div style={{ textDecoration: isBooked ? 'line-through' : 'none' }}>{formattedDate}</div>;
+                                return <div style={{ textDecoration: isBooked ? 'line-through' : 'none' }}>{day}</div>;
                             }}
                         />
                     </Box>
-
                     <BookingField
                         variant="filled"
                         color='success'
@@ -178,4 +191,4 @@ function Booking() {
     )
 }
 
-export default Booking
+export default Booking;
